@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Shefira</title>
+
+<style>
+:root{
+  --pink:#ff6f91;
+  --rose:#ffd6e8;
+  --dark:#0b0b14;
+  --blue:#1b1b2f;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;height:100vh;overflow:hidden;
+  background:radial-gradient(circle at top,var(--blue),var(--dark));
+  font-family:'Segoe UI',sans-serif;color:white;
+}
+.scene{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0.95);
+  transition:all .9s ease;
+  pointer-events:none;
+}
+.scene.active{opacity:1;transform:scale(1);pointer-events:auto}
+.card{
+  width:90%;max-width:820px;
+  padding:55px 50px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(14px);
+  box-shadow:0 30px 80px rgba(0,0,0,0.55);
+  text-align:center;
+}
+h1{font-size:2.6rem;margin-bottom:8px}
+h2{font-weight:400;opacity:.85;margin-bottom:24px}
+.text{font-size:1.35rem;line-height:1.85}
+.highlight{color:var(--rose);font-weight:700}
+.btns{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.btn{
+  padding:13px 30px;border:none;border-radius:40px;
+  background:linear-gradient(135deg,var(--pink),var(--rose));
+  color:#3b0a1a;font-size:1.02rem;font-weight:600;
+  cursor:pointer;box-shadow:0 15px 35px rgba(0,0,0,.35);
+  transition:all .25s ease
+}
+.btn:hover{transform:scale(1.08)}
+.emoji{display:inline-block;animation:bounce 1.6s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;opacity:.7;animation:float 6s linear infinite}
+@keyframes float{from{transform:translateY(100vh)}to{transform:translateY(-10vh)}}
+
+#gift{font-size:6rem;cursor:pointer;animation:wiggle 1.8s infinite;user-select:none}
+@keyframes wiggle{
+  0%,100%{transform:rotate(0)}
+  25%{transform:rotate(5deg)}
+  75%{transform:rotate(-5deg)}
+}
+
+/* EMOJI BUNGA GERAK */
+.popEmoji{
+  position:absolute;
+  font-size:2rem;
+  animation:
+    popUp 1.4s ease forwards,
+    floatEmoji 2.4s ease-in-out infinite;
+}
+@keyframes popUp{
+  from{opacity:1;transform:translateY(0) scale(1)}
+  to{opacity:0;transform:translateY(-100px) scale(1.4)}
+}
+@keyframes floatEmoji{
+  0%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-12px) rotate(6deg)}
+  100%{transform:translateY(0) rotate(-6deg)}
+}
+
+/* TEKS SETELAH KADO */
+#giftText{
+  margin-top:12px;
+  font-size:1.2rem;
+  color:var(--rose);
+  opacity:0;
+  animation:fadeUp 1s ease forwards;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<div class="scene active" id="s1">
+  <div class="card">
+    <h1>Buat Shefira <span class="emoji">✨</span></h1>
+    <h2>Ini hadiahnyaa dari aku, Tori</h2>
+    <div class="text">
+      Jujurr aku bikin ini sambil senyum sendirii wkwkwkwkwk 😆<br>
+      Semoga hadiah kecil ini bisa berarti yaa buat kamuu<br>
+      <span class="highlight">Aku buat ini ada alesannya kok</span>
+    </div>
+    <div class="btns">
+      <button class="btn" onclick="next()">Apa alesannya?</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s2">
+  <div class="card">
+    <h1>Congratsss yaa 🥳</h1>
+    <div class="text">
+      Selamat! aku denger denger nilai UAS <span class="highlight">Fisika</span> kamu tertinggi<br>
+      di kelas yaa 🏆<br><br>
+      Aku dengernya jadii ikutann seneng banget 🥰
+    </div>
+    <div class="btns">
+      <button class="btn" onclick="prev()">⬅ Balik</button>
+      <button class="btn" onclick="next()">PROUD OF YOU</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s3">
+  <div class="card">
+    <h1>Sekali lagi selamat ya SHEF 🌷</h1>
+    <div class="text">
+      Oiyaa ada sedikit doa buat kamu<br>
+      Semoga kedepannya kamu makin semangat belajar dan berjuangnya yaa<br>
+      Semangat selaluu sheffiraa✨
+    </div>
+    <div class="btns">
+      <button class="btn" onclick="prev()">⬅ Balik</button>
+      <button class="btn" onclick="next()">AAMIIN</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s4">
+  <div class="card">
+    <div id="gift" onclick="openGift()">🎁</div>
+    <p id="hint" style="opacity:.7;margin-top:18px">Klik kadonya pelan-pelan 🙂</p>
+    <p id="giftText"></p>
+    <div class="btns">
+      <button class="btn" onclick="prev()">⬅ Balik</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let current=1;
+function show(n){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  current=n;
+}
+function next(){if(current<4)show(current+1)}
+function prev(){if(current>1)show(current-1)}
+
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=(4+Math.random()*6)+'s';
+  s.style.animationDelay=Math.random()*5+'s';
+  document.body.appendChild(s);
+}
+
+let opened=false;
+function openGift(){
+  if(opened) return;
+  opened=true;
+
+  const flowers=['🌷','🌸','🌹','🌺','💐'];
+  for(let i=0;i<14;i++){
+    const f=document.createElement('div');
+    f.className='popEmoji';
+    f.innerText=flowers[Math.floor(Math.random()*flowers.length)];
+    f.style.left=(window.innerWidth/2+Math.random()*200-100)+'px';
+    f.style.top=(window.innerHeight/2)+'px';
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),2000);
+  }
+
+  document.getElementById('gift').innerText='🌷';
+  document.getElementById('giftText').innerText='Tadaaa bungaaa buat kamu :)';
+}
+</script>
+
+</body>
+</html>
